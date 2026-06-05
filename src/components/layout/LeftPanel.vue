@@ -25,6 +25,8 @@ const scores = useScoresStore()
 const ui = useUIStore()
 const { t } = useI18n()
 
+const emit = defineEmits<{ splash: [] }>()
+
 const moduleMap: Record<string, any> = {
   'graphic-quality': GraphicQualityModule,
   'legibility': LegibilityModule,
@@ -48,7 +50,7 @@ const currentModule = computed(() => {
 <template>
   <div class="left-panel">
     <div class="panel-header">
-      <div class="panel-label mono">{{ t('ui.brandCriteria') }}</div>
+      <div class="panel-label mono" @click="emit('splash')">{{ t('ui.brandCriteria') }}</div>
       <div class="panel-header-right">
       </div>
     </div>
@@ -116,7 +118,10 @@ const currentModule = computed(() => {
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--text-tertiary);
+  cursor: pointer;
+  user-select: none;
 }
+.panel-label:hover { color: var(--text-secondary); }
 
 .panel-id {
   font-size: 11px;

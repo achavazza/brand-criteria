@@ -52,6 +52,7 @@ function handleFileSelect(e: Event) {
       </div>
       <p class="upload-title">{{ t('uploader.dropHere') }}</p>
       <p class="upload-hint mono">{{ t('uploader.clickToSelect') }}</p>
+      <p class="upload-size-hint">{{ t('uploader.sizeHint') }}</p>
       <input
         type="file"
         accept="image/*"
@@ -103,6 +104,15 @@ function handleFileSelect(e: Event) {
   font-size: 10px;
   color: var(--text-tertiary);
   letter-spacing: 1px;
+}
+
+.upload-size-hint {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.3px;
+  opacity: 0.55;
+  max-width: 220px;
+  line-height: 1.4;
 }
 
 .file-input {

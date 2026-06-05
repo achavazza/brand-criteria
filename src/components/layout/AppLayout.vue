@@ -10,7 +10,7 @@ const started = ref(false)
 <template>
   <SplashView v-if="!started" @start="started = true" />
   <div v-show="started" class="app-layout">
-    <LeftPanel />
+    <LeftPanel @splash="started = false" />
     <RightPanel />
   </div>
 </template>

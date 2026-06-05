@@ -28,6 +28,7 @@ export interface Messages {
   uploader: {
     dropHere: string
     clickToSelect: string
+    sizeHint: string
   }
   modules: {
     inspectionMode: string
@@ -126,6 +127,7 @@ const enMessages: Messages = {
   uploader: {
     dropHere: 'Drop your mark here',
     clickToSelect: 'or click to select a file',
+    sizeHint: 'Use the highest resolution version available.',
   },
   modules: {
     inspectionMode: 'Inspection Mode',
@@ -385,6 +387,7 @@ const esMessages: Messages = {
   uploader: {
     dropHere: 'Arrastra tu marca aquí',
     clickToSelect: 'o haz clic para seleccionar un archivo',
+    sizeHint: 'Usa la versión de mayor resolución disponible.',
   },
   modules: {
     inspectionMode: 'Modo Inspección',
