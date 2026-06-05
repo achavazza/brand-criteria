@@ -24,6 +24,7 @@ export interface Messages {
   }
   modules: {
     inspectionMode: string
+    inspectionHint: string
     sizeContrast: string
     sizes: string
     variants: string
@@ -107,6 +108,7 @@ const enMessages: Messages = {
   },
   modules: {
     inspectionMode: 'Inspection Mode',
+    inspectionHint: 'Move cursor over the logo',
     sizeContrast: 'Size & Contrast Simulation',
     sizes: 'Sizes',
     variants: 'Variants',
@@ -336,6 +338,7 @@ const esMessages: Messages = {
   },
   modules: {
     inspectionMode: 'Modo Inspección',
+    inspectionHint: 'Mueve el cursor sobre el logo',
     sizeContrast: 'Simulación de Tamaño y Contraste',
     sizes: 'Tamaños',
     variants: 'Variantes',

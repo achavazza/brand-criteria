@@ -18,7 +18,7 @@ const values = ref<Record<number, number>>({ 0: 3, 1: 3, 2: 3, 3: 3 })
       <span class="module-label mono">{{ t('modules.trendDependency') }}</span>
     </div>
 
-    <div class="logo-area">
+    <div class="logo-area" :style="{ background: logo.bgColor || undefined }">
       <img :src="logo.dataUrl!" alt="" class="large-logo" />
     </div>
 

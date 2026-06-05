@@ -108,7 +108,7 @@ onUnmounted(() => {
       <span class="module-hint mono">Move cursor over the logo</span>
     </div>
 
-    <div class="logo-area">
+    <div class="logo-area" :style="{ background: logo.bgColor || undefined }">
       <img
         ref="imgRef"
         :src="logo.dataUrl!"
@@ -117,8 +117,7 @@ onUnmounted(() => {
       />
     </div>
 
-    <div class="module-footer mono">curves · spacing · geometry · optical corrections · balance</div>
-
+   
     <div
       v-if="mouseInPanel"
       class="inspection-frame"
@@ -172,12 +171,10 @@ onUnmounted(() => {
 }
 
 .module-header {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+  
   display: flex;
   justify-content: space-between;
+  width: 100%;
   padding: 0 0 16px;
 }
 
@@ -201,6 +198,7 @@ onUnmounted(() => {
   flex: 1;
   width: 100%;
   position: relative;
+  border: 1px solid var(--border-color);
 }
 
 .inspect-logo {

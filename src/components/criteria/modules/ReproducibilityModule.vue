@@ -21,7 +21,7 @@ const simDescs = computed(() => tm('reproducibility.simDescriptions') as unknown
 const simConfig = computed(() => {
   const idx = simIds.indexOf(activeSim.value)
   const map: Record<SimId, { bg: string | null; filterClass: string }> = {
-    '1color': { bg: null, filterClass: '' },
+    '1color': { bg: logo.bgColor, filterClass: '' },
     'photocopy': { bg: paper, filterClass: 'filter-photocopy' },
     'newsprint': { bg: paper, filterClass: 'filter-newsprint' },
     'embroidery': { bg: cloth, filterClass: '' },
@@ -46,7 +46,7 @@ const simConfig = computed(() => {
 
     <div
       class="sim-display"
-      :style="simConfig.bg ? { backgroundImage: `url(${simConfig.bg})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}"
+      :style="activeSim === '1color' && simConfig.bg ? { background: simConfig.bg } : simConfig.bg ? { backgroundImage: `url(${simConfig.bg})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}"
     >
       <img
         v-if="simConfig.bg"

@@ -42,7 +42,7 @@ function setBreakpoint(index: number) {
           <span v-else-if="breakpointIndex !== null && i > breakpointIndex" class="cross">✗</span>
           <span v-else-if="hoveredIndex === i">▸</span>
         </span>
-        <div class="scale-frame">
+        <div class="scale-frame" :style="{ background: logo.bgColor || undefined }">
           <img :src="logo.dataUrl!" alt="" class="scale-image" :style="{ width: s + 'px' }" />
         </div>
         <span class="scale-value mono">{{ s }}px</span>

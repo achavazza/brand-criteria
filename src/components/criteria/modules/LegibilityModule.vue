@@ -21,42 +21,42 @@ const activeView = ref<'sizes' | 'variants'>('sizes')
     <div v-if="activeView === 'sizes'" class="size-grid">
       <div class="size-item">
         <span class="size-label mono">{{ t('modules.sizeLarge') }}</span>
-        <div class="size-frame">
+        <div class="size-frame" :style="{ background: logo.bgColor || undefined }">
           <img :src="logo.dataUrl!" class="size-image" style="width:100%" />
         </div>
       </div>
       <div class="size-row">
         <div class="size-item">
           <span class="size-label mono">{{ t('modules.sizeMedium') }}</span>
-          <div class="size-frame">
+          <div class="size-frame" :style="{ background: logo.bgColor || undefined }">
             <img :src="logo.dataUrl!" class="size-image" style="width:50%" />
           </div>
         </div>
         <div class="size-item">
           <span class="size-label mono">{{ t('modules.sizeSmall') }}</span>
-          <div class="size-frame">
+          <div class="size-frame" :style="{ background: logo.bgColor || undefined }">
             <img :src="logo.dataUrl!" class="size-image" style="width:25%" />
           </div>
         </div>
       </div>
       <div class="size-item">
         <span class="size-label mono">{{ t('modules.sizeFavicon') }}</span>
-        <div class="size-frame" style="padding:12px 16px;min-height:auto"><img :src="logo.dataUrl!" class="size-image" style="width:16px;height:16px" /></div>
+        <div class="size-frame" style="padding:12px 16px;min-height:auto" :style="{ background: logo.bgColor || undefined }"><img :src="logo.dataUrl!" class="size-image" style="width:16px;height:16px" /></div>
       </div>
     </div>
 
     <div v-if="activeView === 'variants'" class="variants-list">
       <div class="variant-item full">
         <span class="variant-label mono">{{ t('modules.variantPositive') }}</span>
-        <div class="variant-frame wide"><img :src="logo.dataUrl!" class="variant-image" /></div>
+        <div class="variant-frame wide" :style="{ background: logo.bgColor || undefined }"><img :src="logo.dataUrl!" class="variant-image" /></div>
       </div>
       <div class="variant-item full">
         <span class="variant-label mono">{{ t('modules.variantNegative') }}</span>
-        <div class="variant-frame wide"><img :src="logo.dataUrl!" class="variant-image" style="filter:invert(1)" /></div>
+        <div class="variant-frame wide" :style="{ background: logo.bgColor || undefined }"><img :src="logo.dataUrl!" class="variant-image" style="filter:invert(1)" /></div>
       </div>
       <div class="variant-item full">
         <span class="variant-label mono">{{ t('modules.variantMonochrome') }}</span>
-        <div class="variant-frame wide"><img :src="logo.dataUrl!" class="variant-image" style="filter:grayscale(1)" /></div>
+        <div class="variant-frame wide" :style="{ background: logo.bgColor || undefined }"><img :src="logo.dataUrl!" class="variant-image" style="filter:grayscale(1)" /></div>
       </div>
     </div>
 

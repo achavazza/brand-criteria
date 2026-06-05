@@ -107,7 +107,7 @@ const hasNext = computed(() => ui.activeCriterionIndex < ui.totalSteps - 1)
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 12px 24px;
+  padding: 11px 24px;
   border-bottom: 1px solid var(--border-color);
   background: var(--bg-primary);
   flex-shrink: 0;
@@ -124,7 +124,7 @@ const hasNext = computed(() => ui.activeCriterionIndex < ui.totalSteps - 1)
   border: 1px solid var(--border-color);
   color: var(--text-primary);
   padding: 8px 32px 8px 12px;
-  font-size: 12px;
+  font-size: 13px;
   appearance: none;
   cursor: pointer;
   border-radius: 0;

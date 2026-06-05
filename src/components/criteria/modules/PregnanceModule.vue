@@ -14,7 +14,7 @@ const { t } = useI18n()
 
     <div class="prompt mono">{{ t('pregnance.prompt') }}</div>
 
-    <div class="logo-area">
+    <div class="logo-area" :style="{ background: logo.bgColor || undefined }">
       <img :src="logo.dataUrl!" alt="Logo" class="pregnance-logo" />
     </div>
 

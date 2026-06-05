@@ -48,7 +48,7 @@ onMounted(() => {
 
     <div class="grid">
       <div v-for="i in totalCells" :key="i" class="cell">
-        <div v-if="i - 1 === logoIndex && logo.dataUrl" class="cell-content">
+        <div v-if="i - 1 === logoIndex && logo.dataUrl" class="cell-content" :style="{ background: logo.bgColor || undefined }">
           <img :src="logo.dataUrl!" alt="" class="cell-img" />
         </div>
         <div v-else-if="competitorLogos[i - 1]" class="cell-content">

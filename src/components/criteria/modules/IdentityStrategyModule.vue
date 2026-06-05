@@ -12,7 +12,7 @@ const { t } = useI18n()
       <span class="module-label mono">{{ t('modules.identityStrategy') }}</span>
     </div>
 
-    <div class="logo-area">
+    <div class="logo-area" :style="{ background: logo.bgColor || undefined }">
       <img :src="logo.dataUrl!" alt="" class="large-logo" />
     </div>
 
