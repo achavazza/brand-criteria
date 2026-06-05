@@ -192,6 +192,7 @@ onUnmounted(() => {
 }
 
 .logo-area {
+  cursor: none;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -50,7 +50,7 @@ const currentModule = computed(() => {
 </script>
 
 <template>
-  <div class="left-panel" :class="{ inspecting: ui.activeCriterion === 'graphic-quality' && !!logo.dataUrl }">
+  <div class="left-panel">
     <div class="panel-header">
       <div class="panel-label mono">{{ t('ui.brandCriteria') }}</div>
       <div class="panel-id mono">

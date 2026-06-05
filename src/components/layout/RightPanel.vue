@@ -78,13 +78,15 @@ const hasNext = computed(() => ui.activeCriterionIndex < ui.totalSteps - 1)
     </div>
 
     <div class="content-area" v-else-if="currentCriterion">
-      <CriterionView
-        :key="crit.id"
-        :criterion="crit"
-        :score="scores.getScore(crit.id)"
-        @update:score="(v: number) => scores.setScore(crit.id, v)"
-        @update:notes="(v: string) => scores.setNotes(crit.id, v)"
-      />
+      <Transition name="criterion" mode="out-in">
+        <CriterionView
+          :key="crit.id"
+          :criterion="crit"
+          :score="scores.getScore(crit.id)"
+          @update:score="(v: number) => scores.setScore(crit.id, v)"
+          @update:notes="(v: string) => scores.setNotes(crit.id, v)"
+        />
+      </Transition>
     </div>
 
     <div class="content-area empty" v-else>
@@ -203,5 +205,20 @@ const hasNext = computed(() => ui.activeCriterionIndex < ui.totalSteps - 1)
   .panel-header {
     display: none !important;
   }
+}
+</style>
+
+<style>
+.criterion-enter-active,
+.criterion-leave-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.criterion-enter-from {
+  opacity: 0;
+  transform: translateX(12px);
+}
+.criterion-leave-to {
+  opacity: 0;
+  transform: translateX(-12px);
 }
 </style>

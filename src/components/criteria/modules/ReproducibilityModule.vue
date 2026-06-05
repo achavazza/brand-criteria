@@ -51,8 +51,8 @@ const simConfig = computed(() => {
       <img
         v-if="simConfig.bg"
         :src="logo.dataUrl!"
-        class="sim-image blended"
-        :class="simConfig.filterClass"
+        class="sim-image"
+        :class="[simConfig.filterClass, { blended: activeSim !== '1color' }]"
       />
       <img
         v-else
