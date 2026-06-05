@@ -18,6 +18,13 @@ export interface Messages {
     next: string
     reportOption: string
   }
+  splash: {
+    line1: string
+    line2: string
+    line3a: string
+    line3b: string
+    start: string
+  }
   uploader: {
     dropHere: string
     clickToSelect: string
@@ -55,6 +62,13 @@ export interface Messages {
     prompt: string
     gestaltLabel: string
     gestalt: string[]
+    indicators: Array<{ title: string; question: string; left: string; right: string }>
+  }
+  semanticRelevance: {
+    indicators: Array<{ title: string; question: string; left: string; right: string }>
+  }
+  identityStrategy: {
+    indicators: Array<{ title: string; question: string; left: string; right: string }>
   }
   longevity: {
     indicators: Array<{ title: string; question: string; left: string; right: string }>
@@ -102,6 +116,13 @@ const enMessages: Messages = {
     next: 'Next \u2192',
     reportOption: '11 Final Report',
   },
+  splash: {
+    line1: 'The effectiveness of a brand does not depend on its beauty,\nbut on its ability to fulfill a function.',
+    line2: 'Examine the brand through visual, semantic, and strategic performance criteria.',
+    line3a: 'The result is not an opinion.',
+    line3b: 'It is a structured evaluation.',
+    start: 'Start Evaluation',
+  },
   uploader: {
     dropHere: 'Drop your mark here',
     clickToSelect: 'or click to select a file',
@@ -144,6 +165,28 @@ const enMessages: Messages = {
       'Symmetry — Is there a clear organizing axis?',
       'Figure-ground — Is the relationship stable?',
       'Simplicity — Can the form be reduced further?',
+    ],
+    indicators: [
+      { title: 'Formal complexity', question: 'Can the form be grasped quickly?', left: 'Simple', right: 'Complex' },
+      { title: 'Perceptual unity', question: 'Is it perceived as one shape or multiple elements?', left: 'Unitary', right: 'Fragmented' },
+      { title: 'Focal point', question: 'Is there a dominant element or multiple competing?', left: 'Focalized', right: 'Dispersed' },
+      { title: 'Visual abstraction', question: 'Is the form immediate or does it require interpretation?', left: 'Immediate', right: 'Ambiguous' },
+    ],
+  },
+  semanticRelevance: {
+    indicators: [
+      { title: 'Form-meaning relationship', question: 'Is the connection evident?', left: 'Arbitrary', right: 'Expressive' },
+      { title: 'Type of meaning', question: 'How literal is the reference?', left: 'Literal', right: 'Metaphorical' },
+      { title: 'Sector adequacy', question: 'Do the visual codes belong to the brand\'s universe?', left: 'Incongruent', right: 'Pertinent' },
+      { title: 'Verbal-visual coherence', question: 'Does what I see match what the brand says?', left: 'Dissociated', right: 'Coherent' },
+    ],
+  },
+  identityStrategy: {
+    indicators: [
+      { title: 'Personality', question: 'Institutional or human?', left: 'Institutional', right: 'Human' },
+      { title: 'Perceived innovation', question: 'Traditional or innovative?', left: 'Traditional', right: 'Innovative' },
+      { title: 'Audience', question: 'Accessible or premium?', left: 'Accessible', right: 'Premium' },
+      { title: 'Projected identity', question: 'Generic or differentiated?', left: 'Generic', right: 'Differentiated' },
     ],
   },
   longevity: {
@@ -332,6 +375,13 @@ const esMessages: Messages = {
     next: 'Siguiente \u2192',
     reportOption: '11 Informe Final',
   },
+  splash: {
+    line1: 'La eficacia de una marca no depende de su belleza,\nsino de su capacidad para cumplir una función.',
+    line2: 'Examine la marca a través de criterios de rendimiento visual, semántico y estratégico.',
+    line3a: 'El resultado no es una opinión.',
+    line3b: 'Es una evaluación estructurada.',
+    start: 'Iniciar Evaluación',
+  },
   uploader: {
     dropHere: 'Arrastra tu marca aquí',
     clickToSelect: 'o haz clic para seleccionar un archivo',
@@ -374,6 +424,28 @@ const esMessages: Messages = {
       'Simetría — ¿Hay un eje organizador claro?',
       'Figura-fondo — ¿La relación es estable?',
       'Simplicidad — ¿Se puede reducir aún más la forma?',
+    ],
+    indicators: [
+      { title: 'Complejidad formal', question: '¿La forma puede captarse rápidamente?', left: 'Simple', right: 'Compleja' },
+      { title: 'Unidad perceptual', question: '¿Se percibe como una única forma o como múltiples elementos?', left: 'Unitaria', right: 'Fragmentada' },
+      { title: 'Punto focal', question: '¿Existe un elemento dominante o varios compiten por atención?', left: 'Focalizada', right: 'Dispersa' },
+      { title: 'Abstracción visual', question: '¿La forma es inmediata o requiere interpretación?', left: 'Inmediata', right: 'Ambigua' },
+    ],
+  },
+  semanticRelevance: {
+    indicators: [
+      { title: 'Relación forma-significado', question: '¿La conexión es evidente?', left: 'Arbitraria', right: 'Expresiva' },
+      { title: 'Tipo de significado', question: '¿Qué tan literal es la referencia?', left: 'Literal', right: 'Metafórica' },
+      { title: 'Adecuación sectorial', question: '¿Los códigos visuales pertenecen al universo de la marca?', left: 'Incongruente', right: 'Pertinente' },
+      { title: 'Coherencia verbal-visual', question: '¿Lo que veo coincide con lo que la marca dice?', left: 'Disociada', right: 'Coherente' },
+    ],
+  },
+  identityStrategy: {
+    indicators: [
+      { title: 'Personalidad', question: 'Institucional o humana?', left: 'Institucional', right: 'Humana' },
+      { title: 'Innovación percibida', question: 'Tradicional o innovadora?', left: 'Tradicional', right: 'Innovadora' },
+      { title: 'Audiencia', question: 'Accesible o premium?', left: 'Accesible', right: 'Premium' },
+      { title: 'Identidad proyectada', question: 'Genérica o diferenciada?', left: 'Genérica', right: 'Diferenciada' },
     ],
   },
   longevity: {

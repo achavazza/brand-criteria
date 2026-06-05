@@ -2,10 +2,22 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useLogoStore } from '../../../stores/logo'
+import { useCapturesStore } from '../../../stores/captures'
+import { captureElement } from '../../../utils/capture'
 
 const logo = useLogoStore()
+const captures = useCapturesStore()
 const { t } = useI18n()
 const activeView = ref<'sizes' | 'variants'>('sizes')
+
+async function captureFrame(el: EventTarget | null, label: string, key: string) {
+  if (captures.isCaptured(key)) { captures.remove(key); return }
+  const frame = (el as HTMLElement)?.closest('.size-frame, .variant-frame') as HTMLElement | null
+  if (!frame) return
+  try {
+    captures.add('legibility', label, await captureElement(frame), key)
+  } catch { /* ignore */ }
+}
 </script>
 
 <template>
@@ -21,42 +33,42 @@ const activeView = ref<'sizes' | 'variants'>('sizes')
     <div v-if="activeView === 'sizes'" class="size-grid">
       <div class="size-item">
         <span class="size-label mono">{{ t('modules.sizeLarge') }}</span>
-        <div class="size-frame" :style="{ background: logo.bgColor || undefined }">
+        <div class="size-frame" :class="{ captured: captures.isCaptured('leg:size-large') }" :style="{ background: logo.bgColor || undefined }" @click="captureFrame($event.target, t('modules.sizeLarge'), 'leg:size-large')">
           <img :src="logo.dataUrl!" class="size-image" style="width:100%" />
         </div>
       </div>
       <div class="size-row">
         <div class="size-item">
           <span class="size-label mono">{{ t('modules.sizeMedium') }}</span>
-          <div class="size-frame" :style="{ background: logo.bgColor || undefined }">
+          <div class="size-frame" :class="{ captured: captures.isCaptured('leg:size-medium') }" :style="{ background: logo.bgColor || undefined }" @click="captureFrame($event.target, t('modules.sizeMedium'), 'leg:size-medium')">
             <img :src="logo.dataUrl!" class="size-image" style="width:50%" />
           </div>
         </div>
         <div class="size-item">
           <span class="size-label mono">{{ t('modules.sizeSmall') }}</span>
-          <div class="size-frame" :style="{ background: logo.bgColor || undefined }">
+          <div class="size-frame" :class="{ captured: captures.isCaptured('leg:size-small') }" :style="{ background: logo.bgColor || undefined }" @click="captureFrame($event.target, t('modules.sizeSmall'), 'leg:size-small')">
             <img :src="logo.dataUrl!" class="size-image" style="width:25%" />
           </div>
         </div>
       </div>
       <div class="size-item">
         <span class="size-label mono">{{ t('modules.sizeFavicon') }}</span>
-        <div class="size-frame" style="padding:12px 16px;min-height:auto" :style="{ background: logo.bgColor || undefined }"><img :src="logo.dataUrl!" class="size-image" style="width:16px;height:16px" /></div>
+        <div class="size-frame" :class="{ captured: captures.isCaptured('leg:size-favicon') }" style="padding:12px 16px;min-height:auto" :style="{ background: logo.bgColor || undefined }" @click="captureFrame($event.target, t('modules.sizeFavicon'), 'leg:size-favicon')"><img :src="logo.dataUrl!" class="size-image" style="width:16px;height:16px" /></div>
       </div>
     </div>
 
     <div v-if="activeView === 'variants'" class="variants-list">
       <div class="variant-item full">
         <span class="variant-label mono">{{ t('modules.variantPositive') }}</span>
-        <div class="variant-frame wide" :style="{ background: logo.bgColor || undefined }"><img :src="logo.dataUrl!" class="variant-image" /></div>
+        <div class="variant-frame wide" :class="{ captured: captures.isCaptured('leg:variant-positive') }" :style="{ background: logo.bgColor || undefined }" @click="captureFrame($event.target, t('modules.variantPositive'), 'leg:variant-positive')"><img :src="logo.dataUrl!" class="variant-image" /></div>
       </div>
       <div class="variant-item full">
         <span class="variant-label mono">{{ t('modules.variantNegative') }}</span>
-        <div class="variant-frame wide" :style="{ background: logo.bgColor || undefined }"><img :src="logo.dataUrl!" class="variant-image" style="filter:invert(1)" /></div>
+        <div class="variant-frame wide" :class="{ captured: captures.isCaptured('leg:variant-negative') }" :style="{ background: logo.bgColor || undefined }" @click="captureFrame($event.target, t('modules.variantNegative'), 'leg:variant-negative')"><img :src="logo.dataUrl!" class="variant-image" style="filter:invert(1)" /></div>
       </div>
       <div class="variant-item full">
         <span class="variant-label mono">{{ t('modules.variantMonochrome') }}</span>
-        <div class="variant-frame wide" :style="{ background: logo.bgColor || undefined }"><img :src="logo.dataUrl!" class="variant-image" style="filter:grayscale(1)" /></div>
+        <div class="variant-frame wide" :class="{ captured: captures.isCaptured('leg:variant-monochrome') }" :style="{ background: logo.bgColor || undefined }" @click="captureFrame($event.target, t('modules.variantMonochrome'), 'leg:variant-monochrome')"><img :src="logo.dataUrl!" class="variant-image" style="filter:grayscale(1)" /></div>
       </div>
     </div>
 
@@ -99,4 +111,5 @@ const activeView = ref<'sizes' | 'variants'>('sizes')
 .variant-frame.wide { flex: 1; min-height: 0; }
 .variant-image { max-width: 90%; max-height: 100%; object-fit: contain; display: block; }
 .module-footer { text-align: center; font-size: 10px; color: var(--text-tertiary); letter-spacing: 1px; flex-shrink: 0; }
+.captured { border: 2px solid var(--text-primary) !important; }
 </style>

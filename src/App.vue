@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
+import { useUIStore } from './stores/ui'
 import AppLayout from './components/layout/AppLayout.vue'
 import wood from './assets/wood.jpg'
 import paper from './assets/paper.jpg'
@@ -25,11 +26,23 @@ import l14 from './assets/logos/logos_14.png'
 import l15 from './assets/logos/logos_15.png'
 import l16 from './assets/logos/logos_16.png'
 
+const ui = useUIStore()
+
+function onKeydown(e: KeyboardEvent) {
+  if (e.key === 'ArrowLeft') ui.goToPrevCriterion()
+  else if (e.key === 'ArrowRight') ui.goToNextCriterion()
+}
+
 onMounted(() => {
+  window.addEventListener('keydown', onKeydown)
   ;[wood, paper, cloth, cup, can, tote, phone, l01, l02, l03, l04, l05, l06, l07, l08, l09, l10, l11, l12, l13, l14, l15, l16].forEach(src => {
     const img = new Image()
     img.src = src
   })
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', onKeydown)
 })
 </script>
 

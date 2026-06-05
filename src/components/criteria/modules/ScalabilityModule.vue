@@ -2,8 +2,11 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useLogoStore } from '../../../stores/logo'
+import { useCapturesStore } from '../../../stores/captures'
+import { captureElement } from '../../../utils/capture'
 
 const logo = useLogoStore()
+const captures = useCapturesStore()
 const { t } = useI18n()
 
 const scales = [300, 200, 100, 64, 48, 32, 24, 16]
@@ -13,6 +16,16 @@ const breakpointIndex = ref<number | null>(null)
 
 function setBreakpoint(index: number) {
   breakpointIndex.value = breakpointIndex.value === index ? null : index
+}
+
+async function captureScale(e: MouseEvent, s: number) {
+  const item = (e.currentTarget as HTMLElement)
+  if (!item) return
+  const key = `sc:${s}`
+  if (captures.isCaptured(key)) { captures.remove(key); return }
+  try {
+    captures.add('scalability', `${s}px breakpoint`, await captureElement(item), key)
+  } catch { /* ignore */ }
 }
 </script>
 
@@ -31,11 +44,12 @@ function setBreakpoint(index: number) {
           hovered: hoveredIndex === i,
           ok: breakpointIndex !== null && i <= breakpointIndex,
           fail: breakpointIndex !== null && i > breakpointIndex,
-          active: breakpointIndex === i
+          active: breakpointIndex === i,
+          captured: captures.isCaptured('sc:' + s)
         }"
         @mouseenter="hoveredIndex = i"
         @mouseleave="hoveredIndex = null"
-        @click="setBreakpoint(i)"
+        @click="setBreakpoint(i); captureScale($event, s)"
       >
         <span class="indicator mono">
           <span v-if="breakpointIndex !== null && i <= breakpointIndex" class="check">✓</span>
@@ -84,4 +98,5 @@ function setBreakpoint(index: number) {
 .scale-image { object-fit: contain; height: auto; max-width: none; }
 .scale-value { font-size: 11px; color: var(--text-tertiary); min-width: 36px; text-align: right; margin-left: auto; }
 .module-footer { text-align: center; font-size: 10px; color: var(--text-tertiary); letter-spacing: 1px; flex-shrink: 0; }
+.captured { border: 2px solid var(--text-primary) !important; }
 </style>

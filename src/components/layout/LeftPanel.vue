@@ -3,10 +3,10 @@ import LogoUploader from '../logo/LogoUploader.vue'
 import { useLogoStore } from '../../stores/logo'
 import { useScoresStore } from '../../stores/scores'
 import { useUIStore } from '../../stores/ui'
-import { criteriaData } from '../../data/criteria'
 import ScoreBadge from '../ui/ScoreBadge.vue'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+
 
 import GraphicQualityModule from '../criteria/modules/GraphicQualityModule.vue'
 import LegibilityModule from '../criteria/modules/LegibilityModule.vue'
@@ -24,10 +24,6 @@ const logo = useLogoStore()
 const scores = useScoresStore()
 const ui = useUIStore()
 const { t } = useI18n()
-
-const currentCriterion = computed(() =>
-  criteriaData.find(c => c.id === ui.activeCriterion)
-)
 
 const moduleMap: Record<string, any> = {
   'graphic-quality': GraphicQualityModule,
@@ -53,21 +49,24 @@ const currentModule = computed(() => {
   <div class="left-panel">
     <div class="panel-header">
       <div class="panel-label mono">{{ t('ui.brandCriteria') }}</div>
-      <div class="panel-id mono">
-        {{ currentCriterion ? String(currentCriterion.number).padStart(2, '0') : '--' }}
+      <div class="panel-header-right">
       </div>
     </div>
 
-    <div class="logo-section" v-if="currentModule">
-      <component :is="currentModule" />
-    </div>
-
-    <div class="logo-section upload-section" v-else-if="!logo.dataUrl">
-      <LogoUploader />
-    </div>
-
-    <div class="logo-section empty-section" v-else>
-      <span class="mono">{{ t('ui.selectCriterionBegin') }}</span>
+    <div
+      class="logo-section"
+      :class="{
+        'upload-section': !logo.dataUrl && !currentModule,
+        'empty-section': logo.dataUrl && !currentModule
+      }"
+    >
+      <Transition name="panel" mode="out-in">
+        <component v-if="currentModule" :key="ui.activeCriterion" :is="currentModule" />
+        <LogoUploader v-else-if="!logo.dataUrl" key="upload" />
+        <div v-else key="empty" class="centered">
+          <span class="mono">{{ t('ui.selectCriterionBegin') }}</span>
+        </div>
+      </Transition>
     </div>
 
     <div class="panel-footer">
@@ -123,6 +122,7 @@ const currentModule = computed(() => {
   font-size: 11px;
   color: var(--text-secondary);
 }
+.panel-header-right { display: flex; align-items: center; gap: 12px; }
 
 .logo-section {
   flex: 1;
@@ -176,5 +176,20 @@ const currentModule = computed(() => {
   letter-spacing: 1.5px;
   text-transform: uppercase;
   color: var(--text-tertiary);
+}
+</style>
+
+<style>
+.panel-enter-active,
+.panel-leave-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.panel-enter-from {
+  opacity: 0;
+  transform: translateX(-12px);
+}
+.panel-leave-to {
+  opacity: 0;
+  transform: translateX(12px);
 }
 </style>

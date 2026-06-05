@@ -1,12 +1,15 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useScoresStore } from '../../stores/scores'
 import { useLogoStore } from '../../stores/logo'
+import { useCapturesStore } from '../../stores/captures'
 import { criteriaData } from '../../data/criteria'
 import type { CriterionId } from '../../types'
 
 const scores = useScoresStore()
 const logo = useLogoStore()
+const captures = useCapturesStore()
 const { t } = useI18n()
 
 const techIds: CriterionId[] = ['graphic-quality', 'legibility', 'pregnance', 'versatility', 'reproducibility', 'scalability']
@@ -20,6 +23,25 @@ function c(id: CriterionId) {
     title: t(`criteria.${id}.title`),
   }
 }
+
+const moduleLabels: Record<string, string> = {
+  'graphic-quality': 'Inspection',
+  'legibility': 'Sizes & Variants',
+  'singularity': 'Differentiation Grid',
+  'versatility': 'Mockups',
+  'reproducibility': 'Production Sims',
+  'scalability': 'Scale Breakpoints',
+  'longevity': 'Trend Sliders',
+}
+
+const groupedCaptures = computed(() => {
+  const map: Record<string, typeof captures.items> = {}
+  for (const cap of captures.items) {
+    if (!map[cap.moduleId]) map[cap.moduleId] = []
+    map[cap.moduleId].push(cap)
+  }
+  return map
+})
 </script>
 
 <template>
@@ -72,6 +94,20 @@ function c(id: CriterionId) {
           <span class="crit-max mono">/5</span>
         </div>
         <div v-if="scores.criteria[id]?.notes" class="crit-notes mono">{{ scores.criteria[id].notes }}</div>
+      </div>
+    </div>
+
+    <div v-if="captures.items.length" class="captures-section">
+      <h3 class="section-title mono">Captures</h3>
+      <div v-for="(caps, modId) in groupedCaptures" :key="modId" class="capture-group">
+        <h4 class="capture-group-label mono">{{ moduleLabels[modId] || modId }}</h4>
+        <div class="capture-grid">
+          <div v-for="cap in caps" :key="cap.id" class="capture-card">
+            <img :src="cap.dataUrl" class="capture-img" />
+            <span class="capture-label mono">{{ cap.label }}</span>
+            <div v-if="scores.criteria[modId as CriterionId]?.notes" class="capture-notes mono">{{ scores.criteria[modId as CriterionId]?.notes }}</div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -204,4 +240,13 @@ function c(id: CriterionId) {
   color: var(--text-primary);
   border-color: var(--text-tertiary);
 }
+
+.captures-section { margin-bottom: 24px; }
+.capture-group { margin-bottom: 16px; }
+.capture-group-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 8px; }
+.capture-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+.capture-card { border: 1px solid var(--border-color); padding: 8px; }
+.capture-img { width: 100%; height: auto; display: block; image-rendering: pixelated; }
+.capture-label { display: block; font-size: 9px; color: var(--text-tertiary); margin-top: 4px; letter-spacing: 0.5px; }
+.capture-notes { font-size: 9px; color: var(--text-tertiary); margin-top: 2px; font-style: italic; }
 </style>

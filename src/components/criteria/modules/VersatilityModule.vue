@@ -1,13 +1,25 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { useLogoStore } from '../../../stores/logo'
+import { useCapturesStore } from '../../../stores/captures'
+import { captureElement } from '../../../utils/capture'
 import cup from '../../../assets/cup.png'
 import can from '../../../assets/can.png'
 import tote from '../../../assets/tote.png'
 import phone from '../../../assets/phone.png'
 
 const logo = useLogoStore()
+const captures = useCapturesStore()
 const { t } = useI18n()
+
+async function captureMockup(e: MouseEvent, label: string, key: string) {
+  if (captures.isCaptured(key)) { captures.remove(key); return }
+  const el = (e.currentTarget as HTMLElement)?.querySelector('.mockup') as HTMLElement | null
+  if (!el) return
+  try {
+    captures.add('versatility', label, await captureElement(el), key)
+  } catch { /* ignore */ }
+}
 </script>
 
 <template>
@@ -17,33 +29,33 @@ const { t } = useI18n()
     </div>
 
     <div class="previews-grid">
-      <div class="preview-item">
+      <div class="preview-item" @click="captureMockup($event, 'Phone', 'ver:phone')">
         <span class="pv-label mono">Phone</span>
-        <div class="mockup product-box phone-box" :style="{ backgroundImage: `url(${phone})` }">
+        <div class="mockup product-box phone-box" :class="{ captured: captures.isCaptured('ver:phone') }" :style="{ backgroundImage: `url(${phone})` }">
           <div class="product-overlay phone-overlay">
             <img :src="logo.dataUrl!" class="product-logo" />
           </div>
         </div>
       </div>
-      <div class="preview-item">
+      <div class="preview-item" @click="captureMockup($event, 'Cup', 'ver:cup')">
         <span class="pv-label mono">Cup</span>
-        <div class="mockup product-box" :style="{ backgroundImage: `url(${cup})` }">
+        <div class="mockup product-box" :class="{ captured: captures.isCaptured('ver:cup') }" :style="{ backgroundImage: `url(${cup})` }">
           <div class="product-overlay cup-overlay">
             <img :src="logo.dataUrl!" class="product-logo" />
           </div>
         </div>
       </div>
-      <div class="preview-item">
+      <div class="preview-item" @click="captureMockup($event, 'Can', 'ver:can')">
         <span class="pv-label mono">Can</span>
-        <div class="mockup product-box" :style="{ backgroundImage: `url(${can})` }">
+        <div class="mockup product-box" :class="{ captured: captures.isCaptured('ver:can') }" :style="{ backgroundImage: `url(${can})` }">
           <div class="product-overlay can-overlay">
             <img :src="logo.dataUrl!" class="product-logo" />
           </div>
         </div>
       </div>
-      <div class="preview-item">
+      <div class="preview-item" @click="captureMockup($event, 'Tote', 'ver:tote')">
         <span class="pv-label mono">Tote</span>
-        <div class="mockup product-box" :style="{ backgroundImage: `url(${tote})` }">
+        <div class="mockup product-box" :class="{ captured: captures.isCaptured('ver:tote') }" :style="{ backgroundImage: `url(${tote})` }">
           <div class="product-overlay tote-overlay">
             <img :src="logo.dataUrl!" class="product-logo" />
           </div>
@@ -98,4 +110,5 @@ const { t } = useI18n()
 .can-overlay { inset: 20% 28% 20% 28%; }
 .tote-overlay { inset: 20% 30% 20% 30%; }
 .module-footer { text-align: center; font-size: 10px; color: var(--text-tertiary); letter-spacing: 1px; flex-shrink: 0; }
+.captured { border: 2px solid var(--text-primary) !important; }
 </style>

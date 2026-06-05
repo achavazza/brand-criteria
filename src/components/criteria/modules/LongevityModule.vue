@@ -2,27 +2,42 @@
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useLogoStore } from '../../../stores/logo'
+import { useCapturesStore } from '../../../stores/captures'
+import { captureElement } from '../../../utils/capture'
 
 const logo = useLogoStore()
+const captures = useCapturesStore()
 const { t, tm } = useI18n()
 
 const rawIndicators = computed(() => tm('longevity.indicators') as unknown as Array<{ title: string; question: string; left: string; right: string }>)
 const indicators = computed(() => rawIndicators.value.map((item, i) => ({ id: i, ...item })))
 
 const values = ref<Record<number, number>>({ 0: 3, 1: 3, 2: 3, 3: 3 })
+const stepperRef = ref<HTMLDivElement | null>(null)
+
+async function captureStepper() {
+  if (!stepperRef.value) return
+  const key = 'lo:capture'
+  if (captures.isCaptured(key)) { captures.remove(key); return }
+  try {
+    const vals = Object.values(values.value).join('-')
+    captures.add('longevity', `Sliders [${vals}]`, await captureElement(stepperRef.value), key)
+  } catch { /* ignore */ }
+}
 </script>
 
 <template>
   <div class="longevity-module">
     <div class="module-header">
       <span class="module-label mono">{{ t('modules.trendDependency') }}</span>
+      <button class="capture-btn mono" :class="{ captured: captures.isCaptured('lo:capture') }" @click="captureStepper">Capture</button>
     </div>
 
     <div class="logo-area" :style="{ background: logo.bgColor || undefined }">
       <img :src="logo.dataUrl!" alt="" class="large-logo" />
     </div>
 
-    <div class="stepper-grid">
+    <div ref="stepperRef" class="stepper-grid" :class="{ captured: captures.isCaptured('lo:capture') }">
       <div v-for="item in indicators" :key="item.id" class="stepper-card">
         <div class="step-title">{{ item.title }}</div>
         <div class="step-question mono">{{ item.question }}</div>
@@ -51,6 +66,11 @@ const values = ref<Record<number, number>>({ 0: 3, 1: 3, 2: 3, 3: 3 })
 }
 .module-header { flex-shrink: 0; }
 .module-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-tertiary); }
+.module-header { display: flex; justify-content: space-between; align-items: center; }
+.capture-btn { background: none; border: 1px solid var(--border-light); color: var(--text-tertiary); padding: 4px 10px; font-size: 9px; letter-spacing: 1px; cursor: pointer; }
+.capture-btn:hover { border-color: var(--text-tertiary); color: var(--text-secondary); }
+.capture-btn.captured { border-color: var(--text-primary) !important; color: var(--text-primary); }
+.captured { border: 2px solid var(--text-primary) !important; }
 
 .logo-area {
   flex: 1;

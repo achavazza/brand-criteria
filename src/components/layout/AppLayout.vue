@@ -1,11 +1,15 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import LeftPanel from './LeftPanel.vue'
 import RightPanel from './RightPanel.vue'
+import SplashView from './SplashView.vue'
 
+const started = ref(false)
 </script>
 
 <template>
-  <div class="app-layout">
+  <SplashView v-if="!started" @start="started = true" />
+  <div v-show="started" class="app-layout">
     <LeftPanel />
     <RightPanel />
   </div>

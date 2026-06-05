@@ -2,8 +2,11 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useLogoStore } from '../../../stores/logo'
+import { useCapturesStore } from '../../../stores/captures'
+import { captureElement } from '../../../utils/capture'
 
 const logo = useLogoStore()
+const captures = useCapturesStore()
 const { t } = useI18n()
 
 const mouseX = ref(0)
@@ -23,6 +26,15 @@ const bgSizeY200 = ref(200)
 let rafId: number
 
 const imgRef = ref<HTMLImageElement | null>(null)
+const frameRef = ref<HTMLDivElement | null>(null)
+
+async function onLogoClick() {
+  if (!frameRef.value) return
+  try {
+    const dataUrl = await captureElement(frameRef.value)
+    captures.add('graphic-quality', `Inspection #${captures.byModule('graphic-quality').length + 1} @ (${Math.round(targetX.value)}, ${Math.round(targetY.value)})`, dataUrl, `gq:${Date.now()}`)
+  } catch { /* ignore */ }
+}
 
 function onMouseMove(e: MouseEvent) {
   targetX.value = e.clientX
@@ -64,8 +76,8 @@ function computeRenderBounds(img: HTMLImageElement) {
 }
 
 function animateLoop() {
-  mouseX.value += (targetX.value - mouseX.value) * 0.12
-  mouseY.value += (targetY.value - mouseY.value) * 0.12
+  mouseX.value = targetX.value
+  mouseY.value = targetY.value
 
   if (mouseInPanel.value && imgRef.value) {
     const b = computeRenderBounds(imgRef.value)
@@ -108,7 +120,7 @@ onUnmounted(() => {
       <span class="module-hint mono">Move cursor over the logo</span>
     </div>
 
-    <div class="logo-area" :style="{ background: logo.bgColor || undefined }">
+    <div class="logo-area" :class="{ captured: captures.byModule('graphic-quality').length > 0 }" :style="{ background: logo.bgColor || undefined }" @click="onLogoClick">
       <img
         ref="imgRef"
         :src="logo.dataUrl!"
@@ -120,6 +132,7 @@ onUnmounted(() => {
    
     <div
       v-if="mouseInPanel"
+      ref="frameRef"
       class="inspection-frame"
       :style="{
         left: mouseX - 60 + 'px',
@@ -297,4 +310,5 @@ onUnmounted(() => {
   color: var(--text-tertiary);
   letter-spacing: 1px;
 }
+.captured { border: 2px solid var(--text-primary) !important; }
 </style>

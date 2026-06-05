@@ -2,8 +2,11 @@
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useLogoStore } from '../../../stores/logo'
+import { useCapturesStore } from '../../../stores/captures'
+import { captureElement } from '../../../utils/capture'
 
 const logo = useLogoStore()
+const captures = useCapturesStore()
 const { t } = useI18n()
 
 import logo01 from '../../../assets/logos/logos_01.png'
@@ -30,10 +33,20 @@ const competitorLogos = [
   logo13, logo14, logo15, logo16,
 ]
 
-const totalCells = 20
+const totalCells = 16
 const logoIndex = ref(6)
 
-const midCells = [6, 7, 8, 9, 10, 11, 12, 13]
+const midCells = [4, 5, 6, 7, 8, 9, 10, 11]
+const gridRef = ref<HTMLDivElement | null>(null)
+
+async function onGridClick() {
+  if (!gridRef.value) return
+  const key = 'sg:grid'
+  if (captures.isCaptured(key)) { captures.remove(key); return }
+  try {
+    captures.add('singularity', t('modules.differentiation'), await captureElement(gridRef.value), key)
+  } catch { /* ignore */ }
+}
 
 onMounted(() => {
   logoIndex.value = midCells[Math.floor(Math.random() * midCells.length)]
@@ -46,15 +59,17 @@ onMounted(() => {
       <span class="module-label mono">{{ t('modules.differentiation') }}</span>
     </div>
 
-    <div class="grid">
+    <div ref="gridRef" class="grid" :class="{ captured: captures.isCaptured('sg:grid') }" @click="onGridClick">
       <div v-for="i in totalCells" :key="i" class="cell">
-        <div v-if="i - 1 === logoIndex && logo.dataUrl" class="cell-content" :style="{ background: logo.bgColor || undefined }">
+        <div v-if="i - 1 === logoIndex && logo.dataUrl" class="cell-content">
           <img :src="logo.dataUrl!" alt="" class="cell-img" />
         </div>
         <div v-else-if="competitorLogos[i - 1]" class="cell-content">
           <img :src="competitorLogos[i - 1]" alt="" class="cell-img" />
         </div>
+        <!-- 
         <div v-else class="cell-content empty"></div>
+        -->
       </div>
     </div>
   </div>
@@ -64,16 +79,19 @@ onMounted(() => {
 .singularity-module {
   width: 100%; height: 100%;
   display: flex; flex-direction: column;
+  justify-items: center;
+  justify-content: center;
 }
 .module-header { flex-shrink: 0; padding-bottom: 8px; }
 .module-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-tertiary); }
 
 .grid {
-  flex: 1;
+  flex: 0 1 auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
+  /*gap: 6px;*/
   align-content: center;
+  border: 1px solid var(--border-color);
 }
 
 .cell {
@@ -97,4 +115,5 @@ onMounted(() => {
   background: var(--bg-tertiary);
   opacity: 0.3;
 }
+.captured { border: 2px solid var(--text-primary) !important; }
 </style>
